@@ -79,12 +79,12 @@ class MuZeroConfig:
         self.value_loss_weight = 1  # Scale the value loss to avoid overfitting of the value function, paper recommends 0.25 (See paper appendix Reanalyze)
         self.training_device = "cuda" if torch.cuda.is_available() else "cpu"  # Train on GPU if available
 
-        self.optimizer = "Adam"  # "Adam" or "SGD". Paper uses SGD
+        self.optimizer = "SGD"  # "Adam" or "SGD". Paper uses SGD
         self.weight_decay = 1e-4  # L2 weights regularization
         self.momentum = 0.9  # Used only if optimizer is SGD
 
         # Exponential learning rate schedule
-        self.lr_init = 0.005  # Initial learning rate
+        self.lr_init = 0.05 # 0.005  # Initial learning rate
         self.lr_decay_rate = 1  # Set it to 1 to use a constant learning rate
         self.lr_decay_steps = 1000
 
@@ -92,7 +92,7 @@ class MuZeroConfig:
 
         ### Replay Buffer
         self.window_size = 5000  # Number of self-play games to keep in the replay buffer
-        self.num_unroll_steps = 10  # Number of game moves to keep for every batch element
+        self.num_unroll_steps = 5 # 10  # Number of game moves to keep for every batch element
         self.td_steps = 20  # Number of steps in the future to take into account for calculating the target value
         self.use_last_model_value = False  # Use the last model to provide a fresher, stable n-step value (See paper appendix Reanalyze)
 
@@ -148,7 +148,7 @@ class Game(AbstractGame):
             The new observation, the reward and a boolean if the game has ended.
         """        
         observation, reward, done, _ = self.env.step(action)
-        print("action={}, reward={}, observation={}".format(action, reward, observation))
+        #print("action={}, reward={}, observation={}".format(action, reward, observation))
         return numpy.array(observation), reward, done
 
     def legal_actions(self):

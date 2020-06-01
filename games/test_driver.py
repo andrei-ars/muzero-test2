@@ -37,8 +37,8 @@ class MuZeroConfig:
         self.opponent = None  # Hard coded agent that MuZero faces to assess his progress in multiplayer games. It doesn't influence training. None, "random" or "expert" if implemented in the Game class
 
         ### Self-Play
-        self.num_actors = 4  # Number of simultaneous threads self-playing to feed the replay buffer
-        self.max_moves = 40 #15  # Maximum number of moves if game is not finished before
+        self.num_actors = 1 #4  # Number of simultaneous threads self-playing to feed the replay buffer
+        self.max_moves = 20 #15  # Maximum number of moves if game is not finished before
         self.num_simulations = 20  # Number of future moves self-simulated
         self.discount = 0.997  # Chronological discount of the reward
         self.temperature_threshold = None  # Number of moves before dropping temperature to 0 (ie playing according to the max)
@@ -76,7 +76,7 @@ class MuZeroConfig:
 
         ### Training
         self.results_path = os.path.join(os.path.dirname(__file__), "../results", os.path.basename(__file__)[:-3], datetime.datetime.now().strftime("%Y-%m-%d--%H-%M-%S"))  # Path to store the model weights and TensorBoard logs
-        self.training_steps = 100000  # Total number of training steps (ie weights update according to a batch)
+        self.training_steps = 10000  # Total number of training steps (ie weights update according to a batch)
         self.batch_size = 1  # Number of parts of games to train on at each training step
         self.checkpoint_interval = 1000 # 10  # Number of training steps before using the model for self-playing
         self.value_loss_weight = 1  # Scale the value loss to avoid overfitting of the value function, paper recommends 0.25 (See paper appendix Reanalyze)

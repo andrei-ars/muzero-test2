@@ -59,9 +59,9 @@ class MuZeroConfig:
         self.reduced_channels_reward = 2  # Number of channels in reward head
         self.reduced_channels_value = 2  # Number of channels in value head
         self.reduced_channels_policy = 2  # Number of channels in policy head
-        self.resnet_fc_reward_layers = []  # Define the hidden layers in the reward head of the dynamic network
-        self.resnet_fc_value_layers = []  # Define the hidden layers in the value head of the prediction network
-        self.resnet_fc_policy_layers = []  # Define the hidden layers in the policy head of the prediction network
+        self.resnet_fc_reward_layers = [16]  # Define the hidden layers in the reward head of the dynamic network
+        self.resnet_fc_value_layers = [16]  # Define the hidden layers in the value head of the prediction network
+        self.resnet_fc_policy_layers = [16]  # Define the hidden layers in the policy head of the prediction network
 
         # Fully Connected Network
         self.encoding_size = 8
