@@ -27,7 +27,7 @@ class MuZeroConfig:
         self.seed = 0  # Seed for numpy, torch and the game
 
         ### Game
-        self.observation_shape = (1, 10, 3)  # Dimensions of the game observation, must be 3D (channel, height, width). For a 1D array, please reshape it to (1, 1, length of array)
+        self.observation_shape = (1, 3, 10)  # Dimensions of the game observation, must be 3D (channel, height, width). For a 1D array, please reshape it to (1, 1, length of array)
         self.action_space = [i for i in range(8)]  # Fixed list of all possible actions. You should only edit the length
         self.players = [i for i in range(1)]  # List of players. You should only edit the length
         self.stacked_observations = 0  # Number of previous observations and previous actions to add to the current observation
@@ -76,7 +76,7 @@ class MuZeroConfig:
 
         ### Training
         self.results_path = os.path.join(os.path.dirname(__file__), "../results", os.path.basename(__file__)[:-3], datetime.datetime.now().strftime("%Y-%m-%d--%H-%M-%S"))  # Path to store the model weights and TensorBoard logs
-        self.training_steps = 10000  # Total number of training steps (ie weights update according to a batch)
+        self.training_steps = 1000  # Total number of training steps (ie weights update according to a batch)
         self.batch_size = 1  # Number of parts of games to train on at each training step
         self.checkpoint_interval = 1000 # 10  # Number of training steps before using the model for self-playing
         self.value_loss_weight = 1  # Scale the value loss to avoid overfitting of the value function, paper recommends 0.25 (See paper appendix Reanalyze)
@@ -134,24 +134,21 @@ class Game(AbstractGame):
     def __init__(self, seed=None):
         self.env = TestDriverEnviroment()
 
-        cmd = {
-            #"CLICK-N": "Click the N-th clickable element",
-            #"ENTER-RND": "Enter random text",
-            #"OPEN":     "Open the given website",
-            "WAIT":     "Wait 1 sec",
-            "CHOOSE_FIRST_CLICK":  "Choose the firse clickable element",
-            "CHOOSE_FIRST_SELECT": "Choose the firse selectable element",
-            "CHOOSE_FIRST_ENTER":  "Choose the firse enterable element",
-            "NEXT":     "Go to the next active element",
-            "CLICK":    "Click on the current element",
-            "ENTER":    "Enter DATA in the current element",
-            "SELECT":    "Select the current element",
-            "HIT":      "Hit the current element",
-            "VERIFY":   "Verify the current URL",
-            "CLOSE":    "Close the current page",
-        }
-        self.action_number_to_description = {i: cmd[x] for i, x in enumerate(cmd)}
-        self.action_number_to_cmd = {i: x for i, x in enumerate(cmd)}
+        #cmd = {
+        #    "WAIT":     "Wait 1 sec",
+        #    "CHOOSE_FIRST_CLICK":  "Choose the firse clickable element",
+        #    "CHOOSE_FIRST_SELECT": "Choose the firse selectable element",
+        #    "CHOOSE_FIRST_ENTER":  "Choose the firse enterable element",
+        #    "NEXT":     "Go to the next active element",
+        #    "CLICK":    "Click on the current element",
+        #    "ENTER":    "Enter DATA in the current element",
+        #    "SELECT":    "Select the current element",
+        #    "HIT":      "Hit the current element",
+        #    "VERIFY":   "Verify the current URL",
+        #    "CLOSE":    "Close the current page",
+        #}
+        #self.action_number_to_description = {i: cmd[x] for i, x in enumerate(cmd)}
+        #self.action_number_to_cmd = {i: x for i, x in enumerate(cmd)}
 
     def step(self, action):
         """
@@ -250,7 +247,8 @@ class Selenium_webdriver:
 class Webdriver_imitation:
 
     def __init__(self):
-        self.discovered_elements = {'clickables': ['Sign', 'Currency', 'Skip'], 'selectables': [], 'enterables': ['Your email']}
+        #self.discovered_elements = {'clickables': ['Sign', 'Currency', 'Skip'], 'selectables': [], 'enterables': ['Your email']}
+        self.discovered_elements = {'clickables': ['Sign', 'Currency', 'Skip'], 'selectables': [], 'enterables': []}
 
     def get_discovered_elements(self):
         return self.discovered_elements
@@ -290,24 +288,43 @@ class TestDriverEnviroment:
         self.chosen_type = None     # 'clickables', 'selectables', 'enterables'
         self.chosen_number = None
 
-        cmd = {
+        #cmd = {
             #"CLICK-N": "Click the N-th clickable element",
             #"ENTER-RND": "Enter random text",
             #"OPEN":     "Open the given website",
-            "WAIT":     "Wait 1 sec",
-            "NEXT":     "Go to the next active element",
-            "CHOOSE_FIRST_CLICK":  "Choose the firse clickable element",
-            "CHOOSE_FIRST_ENTER":  "Choose the firse enterable element",
-            "CHOOSE_FIRST_SELECT": "Choose the firse selectable element",
-            "CLICK":    "Click on the current element",
-            "ENTER":    "Enter DATA in the current element",
-            "SELECT":    "Select the current element",
-            "HIT":      "Hit the current element",
-            "VERIFY":   "Verify the current URL",
-            "CLOSE":    "Close the current page",
-        }
-        self.action_number_to_description = {i: cmd[x] for i, x in enumerate(cmd)}
-        self.action_number_to_cmd = {i: x for i, x in enumerate(cmd)}
+        #    "WAIT":     "Wait 1 sec",
+        #    "NEXT":     "Go to the next active element",
+        #    "CHOOSE_FIRST_CLICK":  "Choose the firse clickable element",
+        #    "CHOOSE_FIRST_ENTER":  "Choose the firse enterable element",
+        #    "CHOOSE_FIRST_SELECT": "Choose the firse selectable element",
+        #    "CLICK":    "Click on the current element",
+        #    "ENTER":    "Enter DATA in the current element",
+        #    "SELECT":    "Select the current element",
+        #    "HIT":      "Hit the current element",
+        #    "VERIFY":   "Verify the current URL",
+        #    "CLOSE":    "Close the current page",
+        #}
+        #self.action_number_to_description = {i: cmd[x] for i, x in enumerate(cmd)}
+        #self.action_number_to_cmd = {i: x for i, x in enumerate(cmd)}
+
+        self.possible_actions = [
+            #"CLICK-N": "Click the N-th clickable element",
+            #"ENTER-RND": "Enter random text",
+            #"OPEN":     "Open the given website",
+            (0, "NEXT",     "Go to the next active element"),
+            (1, "CHOOSE_FIRST_CLICK",  "Choose the firse clickable element"),
+            (2, "CLICK",    "Click on the current element"),
+            #(2, "CHOOSE_FIRST_ENTER",  "Choose the firse enterable element"),
+            #(3, "CHOOSE_FIRST_SELECT", "Choose the firse selectable element"),
+            #(5, "ENTER",    "Enter DATA in the current element"),
+            #(6, "SELECT",    "Select the current element"),
+            #(7, "HIT",      "Hit the current element"),
+            #(8, "VERIFY",   "Verify the current URL"),
+            #(9, "CLOSE",    "Close the current page"),
+            #(10, "WAIT",     "Wait 1 sec"),
+        ]
+        self.action_number_to_cmd = {i: x[1] for i, x in enumerate(self.possible_actions)}
+        self.action_number_to_description = {i: x[2] for i, x in enumerate(self.possible_actions)}
 
     def seed(self, seed=None):
         self.np_random, seed = seeding.np_random(seed)
@@ -415,7 +432,7 @@ class TestDriverEnviroment:
         return np.array(state, dtype=np.float32)
 
     def legal_actions(self):
-        legal = [i for i in range(8)]
+        legal = list(range(len(self.possible_actions)))
         return legal
 
     def have_winner(self):
@@ -424,8 +441,11 @@ class TestDriverEnviroment:
         #    return True
         #else:
         #    return False
-        print(np.sum(self.get_observation()))
-        if np.sum(self.get_observation()) < 0.01:
+        observation = self.get_observation()
+        print(np.sum(observation), observation.shape, str(observation))
+        if np.sum(observation) < 0.01:
+            print("YOU WIN")
+            #sys.exit()
             return True
         else:
             return False
