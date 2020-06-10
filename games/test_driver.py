@@ -28,7 +28,7 @@ class MuZeroConfig:
 
         ### Game
         self.observation_shape = (1, 3, 10)  # Dimensions of the game observation, must be 3D (channel, height, width). For a 1D array, please reshape it to (1, 1, length of array)
-        self.action_space = [i for i in range(8)]  # Fixed list of all possible actions. You should only edit the length
+        self.action_space = [i for i in range(3)]  # Fixed list of all possible actions. You should only edit the length
         self.players = [i for i in range(1)]  # List of players. You should only edit the length
         self.stacked_observations = 0  # Number of previous observations and previous actions to add to the current observation
 
@@ -283,10 +283,9 @@ class TestDriverEnviroment:
         self.driver = Webdriver_imitation()
 
         # Init the state
-        self.reset()
-
         self.chosen_type = None     # 'clickables', 'selectables', 'enterables'
         self.chosen_number = None
+        self.reset()
 
         #cmd = {
             #"CLICK-N": "Click the N-th clickable element",
@@ -426,7 +425,18 @@ class TestDriverEnviroment:
         de_type = {0: 'clickables', 1: 'selectables', 2: 'enterables'}
         lengths = [len(discovered_elements[k]) for k in discovered_elements]
         width = 10
-        state = [[1 if i<lengths[j] and discovered_elements[de_type[j]][i] else 0 for i in range(width)] for j in range(len(lengths))]
+        env_state = [[1 if i<lengths[j] and discovered_elements[de_type[j]][i] else 0 for i in range(width)] for j in range(len(lengths))]
+        env_state = np.array(env_state)
+
+        int_state = np.zeros((3, 10))
+        de_type_to_number = {y:x for x,y in de_type.items()}
+        if self.chosen_type and self.chosen_number:
+            de_type_number = de_type_to_number.get(self.chosen_type)
+            int_state[self.chosen_type, self.chosen_number] = 1
+        #self.chosen_type]) > self.chosen_number
+
+        state = np.vstack([env_state, int_state])
+
         #clickables = np.array()
         #state = [clickables, selectables, enterables]
         return np.array(state, dtype=np.float32)
