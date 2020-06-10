@@ -430,11 +430,10 @@ class TestDriverEnviroment:
 
         int_state = np.zeros((3, width), dtype=np.int32)
         de_type_to_number = {y:x for x,y in de_type.items()}
-        if self.chosen_type and self.chosen_number:
+        if self.chosen_type is not None and self.chosen_number is not None:
             de_type_number = de_type_to_number.get(self.chosen_type)
             int_state[de_type_number, self.chosen_number] = 1
         #self.chosen_type]) > self.chosen_number
-
         state = np.vstack([env_state, int_state])
 
         #clickables = np.array()
