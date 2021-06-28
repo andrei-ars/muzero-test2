@@ -9,7 +9,7 @@ options.add_argument("--test-type")
 #options.binary_location = "/usr/bin/chromium"
 driver = webdriver.Chrome(chrome_options=options)
 window_before = driver.window_handles[0]
-driver.get("https://demosites.testgold.dev/login")
+driver.get("https://demo2.testgold.dev/login")
 html_code = driver.page_source
 
 #f = open("/ram/tmp/1.html", "wt")
